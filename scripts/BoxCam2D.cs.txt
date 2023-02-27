@@ -1,0 +1,55 @@
+using Godot;
+using System;
+
+
+public class BoxCam2D : Camera2D {
+	[Export] NodePath Player  = "";
+	public var PlayerPos = new Vector2(0, 0);
+	public var Box = new Vector2(0, 0);
+	private Vector2 DesignRes;
+	Signal OutOfTheBox;
+
+	public override void _Ready() {
+        DesignRes = new Vector2(
+            ProjectSettings.GetSetting("display/window/size/width"), 
+            ProjectSettings.GetSetting("display/window/size/height")
+        );
+		if (Player == "") {
+			GD.Print("BoxCam2D: Assign Player Node in BoxCam2D using Inspector.");
+			this.QueueFree();
+			return ;
+		}
+		else if (!this.Current) {
+			GD.Print("BoxCam2D: Set 'Current' Enabled or it won't work.'");
+
+		}
+		SetBoxPos();
+		if (Connect("out_of_the_box", this, nameof(set_box_pos))) {
+			GD.Print("Box_Cam: Failed To Connect Signal");
+		}
+	}
+    
+	public override void _Process(float _delta) {
+		PlayerPos = this.GetNode(Player).Position;
+		Vector2 currentBox = new Vector2(
+            Floor(PlayerPos.X / (DesignRes.X) * Zoom.X), 
+            Floor(PlayerPos.Y / (DesignRes.Y) * Zoom.Y)
+        );
+		if (currentBox.X != Box.X || CurrentBox.Y != Box.Y) {
+			EmitSignal("out_of_the_box");
+			Box = currentBox;
+		}
+    }
+    
+	public void SetBoxPos() {
+		float boxPosX = (
+            (DesignRes.X * Zoom.X) * Floor(PlayerPos.X / (DesignRes.X) * Zoom.X)
+        );
+		float boxPosY = (
+            (DesignRes.Y * Zoom.Y) * Floor(PlayerPos.Y / (DesignRes.Y) * Zoom.Y)
+        );
+		this.Position.X = (((DesignRes.X) / 2) * Zoom.X) + boxPosX;
+		this.Position.Y = (((DesignRes.Y) / 2) * Zoom.Y) + boxPosY;
+    }
+
+}

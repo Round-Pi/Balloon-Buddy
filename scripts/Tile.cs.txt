@@ -1,0 +1,33 @@
+﻿// MonoGame script created by Cathy Nguyen
+using Microsoft.Xna.Framework;
+using MonoGame.Extended;
+
+// TileMap -> Tile -> CheckBounds
+
+namespace MyGame {
+
+    public class Tile : GameObject {
+        Game1 game1;
+        // public CheckBounds checkBounds;
+        bool tangible;
+        IEntity entity;
+
+        public Tile(Game myGame, Game1 g1, string tileTextureName, bool hasCollision) : base(myGame) {
+            textureName = tileTextureName;
+            game1 = g1;
+            tangible = hasCollision;
+            if (tangible) { // checkBounds = new CheckBounds(myGame, game1);
+                entity = new CubeEntity(g1, new RectangleF(position, new Size2(TileMap.tileSize, TileMap.tileSize)));
+                g1._entities.Add(entity);
+                g1._collisionComponent.Insert(entity);
+            }
+        }
+
+        // public override void Update(float deltaTime) {
+        //     if (tangible)
+        //         checkBounds.CheckCollisions(game1.player, this);
+        // }
+
+        // Add new functions above^
+    }
+}
