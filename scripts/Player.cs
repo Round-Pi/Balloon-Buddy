@@ -3,129 +3,135 @@ using System;
 
 // namespace BalloonBuddy {
 
-// public class Player : Area2D
 public class Player : RigidBody2D {
-	// [Signal]
-	// public delegate void Hit();
-	const float walkSpeed = 600; // positive
-	const float runSpeed = 1200; // positive
-	const float initialJumpSpeed = 10; // positive
-									   //	const float slowFall = 0.3f;
-	const float normalFall = 2;
+    // [Signal]
+    // public delegate void Hit();
+    [Export] bool disableFalling = false;
+    const float walkSpeed = 600; // positive
+    const float runSpeed = 1200; // positive
+    const float initialJumpSpeed = 20; // positive
+    const float slowFall = 9;
+    const float normalFall = 15;
 
-	const float lowestY = 532;
-	//	public float startY = lowestY; // the Y position where jump starts    
-	float jumpSpeed = 0;
-	public bool jumping = false;
-	public float fall;
-	public Vector2 position;
-	//	Timer timer;
-	int counter = 0;
-	bool counting = false;
-	// private Node2D node;
-	// Balloon balloon;
+    const float lowestY = 600;
+    //	public float startY = lowestY; // the Y position where jump starts    
+    float jumpSpeed = 0;
+    public bool jumping = false;
+    public float fall;
+    public Vector2 position;
+    int counter = 0;
+    bool counting = false;
+    public bool haveBalloon = true;
 
-	// public void BalloonFollows(object obj) {
-	//     if (balloon == null) balloon = GetNode<Balloon>("BalloonArea2D");
-	//     if (ShortcutTools.DistanceFloat(Position, balloon.Position) > Balloon.ribbonLength) {
-	//         Vector2 v = balloon.Position - Position;
-	//         balloon.Position = Position + Balloon.ribbonLength * v.Normalized();
-	//     }
-	// }
+    Main main;
 
-	public void Start(Vector2 pos) {
-		position = pos;
-		// node = GetNode<Node2D>("PlayerArea2D");
-		Show();
-		GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;
-	}
-	// public Player(Game myGame, Game1 g1) : base(myGame) {}
+    public void Start() {
+        // node = GetNode<Node2D>("PlayerArea2D");
+        Show();
+        GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;
+    }
+    public void Start(Vector2 pos) {
+        position = pos;
+        Start();
+    }
 
-	//	public void OnPlayerBodyEntered(PhysicsBody2D body) {
-	//		if(body.name =="Terrain Layer")
-	//		else if (body.name=="Enemy") {
-	//			Hide(); // Player disappears after being hit.
-	//			EmitSignal(nameof(Hit));
-	//			// Must be deferred as we can't change physics properties on a physics callback.
-	//			GetNode<CollisionShape2D>("CollisionShape2D").SetDeferred("disabled", true);
-	//		}
-	//
-	//	}
-	public override void _Ready() {
-		position = Position;
-		fall = normalFall;
-		//		timer = new Timer();
-		GD.Print("Hi");
+    public override void _Ready() {
+        position = Position;
+        if (!disableFalling)
+            fall = normalFall;
+        GD.Print("Hi");
+        main = GetParent().GetParent<Main>();
+    }
+    public override void _Process(float delta) {
+        AnimatedSprite animatedSprite = GetNode<AnimatedSprite>("PlayerSprite");
+        position = Position;
+        if (haveBalloon && Input.IsActionJustPressed("secondary_action")) {
+            haveBalloon = false;
+            // check if near balloon parking space, park it at that location
+            main.balloon.isParked = true;
+        }
+        if (Input.IsActionPressed("left")) { // to the left!
+            if (Input.IsActionPressed("hold_to_run")) {
+                position.x -= runSpeed * delta;
+            }
+            else { position.x -= walkSpeed * delta; }
+            animatedSprite.FlipH = true;
+        }
+        else if (Input.IsActionPressed("right")) { // to the Right!
+            if (Input.IsActionPressed("hold_to_run")) {
+                position.x += runSpeed * delta;
+            }
+            else { position.x += walkSpeed * delta; }
+            animatedSprite.FlipH = false;
+        }
+        // Falling, gravity physics stuff
+        if (counter >= 30) {
+            counting = false;
+            counter = 0;
+        }
+        if (jumping && (counting || Input.IsActionPressed("jump"))) {
+            // if (!Input.IsActionPressed("jump")) 
 
-	}
-	public override void _Process(float delta) {
-		// KeyboardState keyState = Keyboard.GetState(); // check keyboard state
-		AnimatedSprite animatedSprite = GetNode<AnimatedSprite>("PlayerSprite");
-		position = Position;
-		if (Input.IsActionPressed("left")) { // to the left!
-			if (Input.IsActionPressed("hold_to_run")) {
-				position.x -= runSpeed * delta;
-			}
-			else { position.x -= walkSpeed * delta; }
-			animatedSprite.FlipH = true;
-		}
-		else if (Input.IsActionPressed("right")) { // to the Right!
-			if (Input.IsActionPressed("hold_to_run")) {
-				position.x += runSpeed * delta;
-			}
-			else { position.x += walkSpeed * delta; }
-			animatedSprite.FlipH = false;
-		}
+            if (jumpSpeed <= 0) {
+                position.y += jumpSpeed; // gravity is an increase in Y
+                jumpSpeed++;
+            }
+            else {
+                jumpSpeed = 0;
+                jumping = false;
+            }
+
+            // jumping = false;
+            // if (Input.IsActionPressed("jump") || jumpSpeed > 0) { jumpSpeed += fall / 4; } // Fall slower when spacebar down
+            //                                                                                // else if (Input.IsActionReleased("jump")) { jumpSpeed += normalFall; } // Fall faster when spacebar up
+            // else if (!Input.IsActionPressed("jump")) { jumpSpeed += fall; } // Fall faster when spacebar up
+            // if (position.y >= startY) {
+            //     position.y = startY; // like a clamp?
+            //     jumping = false; // aka, go to the else statement below.
+            // }
+        }
+
+        // Player jumps	
+        if (Input.IsActionJustPressed("jump") && !counting && !jumping) {
+            // jumping = true; // aka, go to the if statement above.
+            jumping = true;
+            jumpSpeed = -initialJumpSpeed;
+            // play jump sound
+            position.y += jumpSpeed;
+            counting = true;
+            // startY = lowestY; // startY resets
+        }
+        if (!disableFalling) {
+            if (Input.IsActionPressed("jump")) {
+                fall = slowFall;
+            }
+            else {
+                fall = normalFall;
+            }
+        }
+        if (counting) counter++;
+        if (disableFalling) {
+            Position = new Vector2(position.x, position.y + jumpSpeed);
+        }
+        else {
+            if (Position.y <= lowestY) Position = new Vector2(position.x, position.y + fall + jumpSpeed);
+            else Position = new Vector2(position.x, position.y);
+        }
+
+    }
+
+    public void OnCollisionEnter() {
+        // if (node.GetCollisionLayerBit(1))
+        fall = 0;
+        GD.Print("Aaaaaaaahhhh");
+    }
 
 
-		if (counter >= 30 || !Input.IsActionPressed("jump")) { // and falling, gravity physics stuff
-			counting = false;
-			position.y += jumpSpeed; // gravity is an increase in Y
-			if (counter > 0) counter--;
+    public void OnCollisionExit() {
+        fall = normalFall;
+        GD.Print("ok");
+    }
 
-			//			jumping = false;
-			//			if (Input.IsActionPressed("jump") || jumpSpeed > 0) { jumpSpeed += fall/4; } // Fall slower when spacebar down
-			//			// else if (Input.IsActionReleased("jump")) { jumpSpeed += normalFall; } // Fall faster when spacebar up
-			//			else if (!Input.IsActionPressed("jump")) { jumpSpeed += fall; } // Fall faster when spacebar up
-			//			if (position.y >= startY) {
-			//				position.y = startY; // like a clamp?
-			//				jumping = false; // aka, go to the else statement below.
-			//			}
-		}
-		else {
-			if (Input.IsActionPressed("jump") && !counting) { // Player jumps			
-															  //				timer.Stop();
-															  //				jumping = true; // aka, go to the if statement above.
-				jumpSpeed = -12; // initial speed of jump
-								 // play jump sound
-								 //				timer.Start(0.2f);
-				counting = true;
-				//				startY = lowestY; // startY resets
-			}
-		}
-		if (counting) counter++;
-		Position = new Vector2(position.x, position.y + fall);
-		// base._Process(delta);
-	}
-
-	public void OnCollisionEnter() {
-		//		if (node.GetCollisionLayerBit(1)) 
-		fall = 0;
-		GD.Print("Aaaaaaaahhhh");
-	}
-
-
-	public void OnCollisionExit() {
-		fall = normalFall;
-		GD.Print("ok");
-	}
-
-	// Add new functions above^
+    // Add new functions above^
 }
-// }
-
-
-// private void _on_BalloonArea2D_ready()
-// {
-// 	// Replace with function body.
 // }

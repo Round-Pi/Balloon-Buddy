@@ -2,30 +2,47 @@ using Godot;
 using System;
 
 public class Balloon : Area2D {
-    // [Signal]
-    // public void BalloonFollows();
-    // [Signal]
-    // public void _on_BalloonArea2D_ready();
+    // [Signal] public void BalloonPhysics();
+    // [Signal] public void _on_BalloonArea2D_ready();
     public const float ribbonLength = Main.tileSize * 2;
     public const float howMuchHelium = 10; // positive float plz
-    // Player player;
-    // public Main main;
 
-    // public override void _Ready() {
-    //     // player = GetNode<Player>("Player");
-    //     main = GetParent().GetParent().GetNode<Main>("Main");
-    // }
-    // Add your update logic here
-    // public override void _Process(float delta) {
-    //     // Position.y -= howMuchHelium;
-    //     Position -= new Vector2(0, howMuchHelium);
-    //     BalloonFollows(main.player.Position);
-    // }
+    public bool isParked = false;
+    public bool isJustParked = false;
+    public Vector2 isParkedAt;
+    public Main main;
 
-    public void BalloonFollows(Vector2 playerPosition) {
-        if (ShortcutTools.DistanceFloat(playerPosition, Position) > ribbonLength) {
-            Vector2 v = Position - playerPosition;
-            Position = playerPosition + ribbonLength * v.Normalized();
+    public override void _Ready() {
+        // player = GetNode<Player>("Player");
+        main = GetParent().GetParent<Main>();
+    }
+
+    public override void _Process(float delta) {
+        // Position.y -= howMuchHelium;
+        // Position -= new Vector2(0, howMuchHelium);
+        BalloonPhysics();
+    }
+
+    public void Park() {
+
+    }
+    public void BalloonPhysics() {
+        Position -= new Vector2(0, howMuchHelium);
+        Vector2 anchor;
+        if (isParked && !isJustParked) {
+            isParkedAt = main.player.Position;
+            isJustParked = true;
+            anchor = isParkedAt;
+        }
+        else if (!isParked) {
+            anchor = main.player.Position;
+        }
+        else {
+            anchor = isParkedAt;
+        }
+        if (ShortcutTools.DistanceFloat(anchor, Position) > ribbonLength) {
+            Vector2 v = Position - anchor;
+            Position = anchor + ribbonLength * v.Normalized();
         }
     }
     // Add new functions above^

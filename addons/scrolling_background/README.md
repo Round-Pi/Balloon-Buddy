@@ -1,4 +1,4 @@
-# Scolling Background
+# [Scrolling Background](https://github.com/dploeger/godot-scrollingbackground)
 A scrolling background node for Godot
 
 ![Scrolling Background Demo](https://media.giphy.com/media/VRxeMi2lV8y5i/giphy.gif)

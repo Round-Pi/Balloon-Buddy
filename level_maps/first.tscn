@@ -70,10 +70,8 @@ position = Vector2( 31, 31 )
 shape = SubResource( 1 )
 
 [node name="Player" type="RigidBody2D" parent="." index="7"]
-physics_interpolation_mode = 1
 position = Vector2( 933, 390 )
 mode = 3
-continuous_cd = 1
 script = ExtResource( 5 )
 
 [node name="PlayerSprite" type="AnimatedSprite" parent="Player" index="0"]
@@ -90,6 +88,11 @@ position = Vector2( 43, 41 )
 shape = SubResource( 2 )
 one_way_collision = true
 
+[node name="Camera2D" type="Camera2D" parent="Player" index="3"]
+position = Vector2( 47, -4 )
+current = true
+zoom = Vector2( 1.2, 1.2 )
+
 [node name="PlayerArea2D" type="Area2D" parent="." index="8"]
 physics_interpolation_mode = 2
 position = Vector2( 578, 487 )
@@ -103,11 +106,6 @@ centered = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerArea2D" index="1"]
 position = Vector2( 43, 41 )
 shape = SubResource( 2 )
-
-[node name="Camera2D" type="Camera2D" parent="." index="9"]
-position = Vector2( 980, 386 )
-current = true
-zoom = Vector2( 1.2, 1.2 )
 
 [connection signal="child_entered_tree" from="Terrain Layer" to="Player" method="OnCollisionEnter"]
 [connection signal="child_exiting_tree" from="Terrain Layer" to="Player" method="OnCollisionExit"]
