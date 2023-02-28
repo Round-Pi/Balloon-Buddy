@@ -18,15 +18,15 @@ public class ShortcutTools {
     //        return endVec - startVec;
     //    }
 
-    //    public static Vector2 Normalize(float ribbon, Vector2 inputV) {
-    //        // Set the fixed distance away to the float ribbon
-    //        float distance = DistanceFloat(Vector2.Zero, inputV);
-    //        float recip = ribbon / distance;
-    //        Vector2 outputV;
-    //        outputV.X = recip * inputV.X;
-    //        outputV.Y = recip * inputV.Y;
-    //        return outputV;
-    //    }
+    public static Vector2 Normalize(float ribbon, Vector2 inputV) {
+        // Set the fixed distance away to the float ribbon
+        float distance = DistanceFloat(Vector2.Zero, inputV);
+        float recip = ribbon / distance;
+        Vector2 outputV;
+        outputV.x = recip * inputV.x;
+        outputV.y = recip * inputV.y;
+        return outputV;
+    }
 
     // public static void Testing(KeyboardState keyState, bool condition) { // for debugging and play-testing
     //     // Is the bool condition met?

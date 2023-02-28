@@ -1,60 +1,67 @@
 using Godot;
 using System;
 
-public class Balloon : RigidBody2D {
+public class Balloon : KinematicBody2D {
     // [Signal] public void BalloonPhysics();
     // [Signal] public void _on_BalloonArea2D_ready();
-    public const float ribbonLength = Main.tileSize * 3;
+    public const float ribbonLength = Main.tileSize * 2;
     public const float howMuchHelium = 500; // positive float plz
 
-    public bool isParked = false;
-    public bool isJustParked = false;
+    private bool isParked = false;
+    // public bool readyToPark = true;
     public Vector2 isParkedAt;
     private Vector2 velocity = new Vector2();
-    public Main main;
+    Vector2 anchor;
+    private Main main;
+    private Player player;
 
-    public override void _Ready() {
-        main = GetParent().GetParent<Main>();
-    }
+    // public override void _Ready() {
+    //     // main = GetParent().GetParent<Main>();
+    //     main = GetParent<Player>().GetParent().GetParent<Main>();
+    //     player = main.player;
+    // }
 
     public override void _Process(float delta) {
         // Position.y -= howMuchHelium;
         // Position -= new Vector2(0, howMuchHelium);
         BalloonPhysics(delta);
     }
-
-    public void Park() {
-
+    public void Start(Main m) {
+        main = m;
+        player = main.player;
     }
     public void BalloonPhysics(float delta) {
         // Position -= new Vector2(0, howMuchHelium);
-        velocity = new Vector2(main.player.velocity.x - 5, -howMuchHelium);
+        // velocity = new Vector2(main.player.velocity.x, -howMuchHelium);
+        Vector2 tempVelocity;
+        if (isParked) tempVelocity = new Vector2(0, -howMuchHelium);
+        else tempVelocity = new Vector2(-player.velocity.x, -howMuchHelium);
         // velocity.y += -howMuchHelium;
-        // velocity = MoveAndSlide(velocity, new Vector2(0, -1));
+        velocity = MoveAndSlide(tempVelocity, new Vector2(0, 1));
 
-        Vector2 anchor;
-        if (isParked && !isJustParked) {
-            isParkedAt = main.player.Position;
-            isJustParked = true;
-            anchor = isParkedAt;
+        // if (isParked && readyToPark) {
+        //     isParkedAt = main.player.Position;
+        //     readyToPark = false;
+        //     anchor = isParkedAt;
+        // }
+        // else if (!isParked) {
+        //     anchor = main.player.Position;
+        // }
+        // else {
+        //     anchor = isParkedAt;
+        // }
+        if (ShortcutTools.DistanceFloat(anchor, Position) > ribbonLength) {
+            Position = ShortcutTools.Normalize(ribbonLength, Position);
         }
-        else if (!isParked) {
-            anchor = main.player.Position;
-        }
-        else {
-            anchor = isParkedAt;
-        }
-        if (isParked && ShortcutTools.DistanceFloat(anchor, Position) > ribbonLength) {
-            Vector2 v = Position - anchor;
-            Position = anchor + ribbonLength * v.Normalized();
-        }
-        else if (!isParked && ShortcutTools.DistanceFloat(anchor, Position) > ribbonLength) {
-            Vector2 v = Position - main.player.Position;
-            Position = anchor + ribbonLength * v.Normalized();
-            // if (main.player.Position.x != Position.x) {
-            //     velocity += Position - main.player.Position;
-            // }
-        }
+    }
+
+    public void Park(Vector2 pos) {
+        anchor = pos;
+        isParked = true;
+        // readyToPark = false;
+    }
+    public void PickUp() {
+        isParked = false;
     }
     // Add new functions above^
 }

@@ -11,11 +11,11 @@
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 33.5, 33.25 )
 
-[sub_resource type="CircleShape2D" id=1]
-radius = 18.1108
-
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 32, 32 )
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 18.1108
 
 [node name="level" instance=ExtResource( 2 )]
 
@@ -62,7 +62,7 @@ visible = false
 collision_layer = 2
 
 [node name="Block" type="RigidBody2D" parent="." index="6"]
-position = Vector2( 967, 406 )
+position = Vector2( 1340, 725 )
 mode = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Block" index="0"]
@@ -87,21 +87,7 @@ centered = false
 position = Vector2( 43, 41 )
 shape = SubResource( 2 )
 
-[node name="Balloon" type="RigidBody2D" parent="." index="8"]
-position = Vector2( 1073, 228 )
-mass = 0.01
-gravity_scale = -2.0
-script = ExtResource( 6 )
-
-[node name="BalloonSprite" type="AnimatedSprite" parent="Balloon" index="0"]
-frames = ExtResource( 3 )
-centered = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Balloon" index="1"]
-position = Vector2( 31, 31 )
-shape = SubResource( 1 )
-
-[node name="Player" type="KinematicBody2D" parent="." index="9"]
+[node name="Player" type="KinematicBody2D" parent="." index="8"]
 position = Vector2( 1074, 363 )
 script = ExtResource( 5 )
 
@@ -116,7 +102,17 @@ frames = ExtResource( 4 )
 current = true
 zoom = Vector2( 1.2, 1.2 )
 
-[node name="Ribbon" type="Skeleton2D" parent="." index="10"]
+[node name="Balloon" type="KinematicBody2D" parent="Player" index="3"]
+position = Vector2( 0, -135 )
+script = ExtResource( 6 )
+
+[node name="BalloonSprite" type="AnimatedSprite" parent="Player/Balloon" index="0"]
+frames = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Balloon" index="1"]
+shape = SubResource( 1 )
+
+[node name="Ribbon" type="Skeleton2D" parent="." index="9"]
 visible = false
 position = Vector2( 1106, 282 )
 
