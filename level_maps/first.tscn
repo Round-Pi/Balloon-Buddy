@@ -44,25 +44,21 @@ centered = false
 offset = Vector2( -751, 920 )
 
 [node name="Background-Underground" type="Sprite" parent="Backgrounds" index="4"]
-position = Vector2( -1191, 1000 )
-scale = Vector2( 4.16016, 1 )
+position = Vector2( -1000, 1000 )
+scale = Vector2( 4, 1 )
 texture = ExtResource( 1 )
 centered = false
 
-[node name="Background-Underground" parent="." index="2"]
-position = Vector2( -1000, 1000 )
-scale = Vector2( 4, 1 )
-
-[node name="Terrain Layer" parent="." index="4"]
+[node name="Terrain Layer" parent="." index="1"]
 show_collision = true
 collision_bounce = 1.0
 
-[node name="Outline Layer" parent="." index="5"]
+[node name="Outline Layer" parent="." index="2"]
 visible = false
 collision_layer = 2
 
-[node name="Block" type="RigidBody2D" parent="." index="6"]
-position = Vector2( 1340, 725 )
+[node name="Block" type="RigidBody2D" parent="." index="3"]
+position = Vector2( 1120, 736 )
 mode = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Block" index="0"]
@@ -73,7 +69,7 @@ position = Vector2( -32, -32 )
 texture = ExtResource( 7 )
 centered = false
 
-[node name="NPC" type="Area2D" parent="." index="7"]
+[node name="NPC" type="Area2D" parent="." index="4"]
 physics_interpolation_mode = 2
 position = Vector2( 578, 487 )
 gravity_point = true
@@ -87,7 +83,7 @@ centered = false
 position = Vector2( 43, 41 )
 shape = SubResource( 2 )
 
-[node name="Player" type="KinematicBody2D" parent="." index="8"]
+[node name="Player" type="KinematicBody2D" parent="." index="5"]
 position = Vector2( 1074, 363 )
 script = ExtResource( 5 )
 
@@ -112,7 +108,7 @@ frames = ExtResource( 3 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Balloon" index="1"]
 shape = SubResource( 1 )
 
-[node name="Ribbon" type="Skeleton2D" parent="." index="9"]
+[node name="Ribbon" type="Skeleton2D" parent="." index="6"]
 visible = false
 position = Vector2( 1106, 282 )
 
