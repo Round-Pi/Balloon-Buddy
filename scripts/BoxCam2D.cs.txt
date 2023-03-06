@@ -15,8 +15,8 @@ public class BoxCam2D : Camera2D {
     }
     public override void _Ready() {
         designRes = new Vector2(
-            (int)ProjectSettings.GetSetting("display/window/size/width"),
-            (int)ProjectSettings.GetSetting("display/window/size/height")
+            (float)ProjectSettings.GetSetting("display/window/size/width"),
+            (float)ProjectSettings.GetSetting("display/window/size/height")
         );
         if (player == "") {
             GD.Print("BoxCam2D: Assign Player Node in BoxCam2D using Inspector.");

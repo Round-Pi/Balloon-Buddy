@@ -6,7 +6,7 @@ public class Main : Node {
     public Player player;
     public Balloon balloon;
     public Node2D level;
-    public BoxCam2D boxCam2D;
+    // public BoxCam2D boxCam2D;
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready() {
@@ -14,12 +14,12 @@ public class Main : Node {
         player = level.GetNode<Player>("Player");
         // balloon = level.GetNode<Balloon>("Balloon");
         balloon = player.GetNode<Balloon>("Balloon");
-        boxCam2D = player.GetNode<BoxCam2D>("Camera2D");
+        // boxCam2D = player.GetNode<BoxCam2D>("Camera2D");
         // Position2D startPosition = GetNode<Position2D>("StartPosition");
 
         player.Start(this);
         balloon.Start(this);
-        balloon.Position = new Vector2(player.Position.x, player.Position.y - Balloon.ribbonLength);
+        // balloon.Position = new Vector2(player.Position.x, player.Position.y - Balloon.ribbonLength);
 
     }
     // Called every frame. 'delta' is the elapsed time since the previous frame.
