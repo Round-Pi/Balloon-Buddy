@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://content/ParkSpot.tscn" type="PackedScene" id=1]
 [ext_resource path="res://level_maps/first.tmx" type="PackedScene" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://scripts/Player.cs" type="Script" id=5]
 [ext_resource path="res://scripts/Balloon.cs" type="Script" id=6]
 [ext_resource path="res://content/HookMagnet.tscn" type="PackedScene" id=7]
+[ext_resource path="res://content/LiftLock.tscn" type="PackedScene" id=8]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 33.5, 33.25 )
@@ -19,21 +20,29 @@ radius = 18.1108
 
 [node name="level" instance=ExtResource( 2 )]
 
+[node name="Background" parent="." index="0"]
+z_index = -1
+
 [node name="Terrain Layer" parent="." index="1"]
 show_collision = true
 collision_bounce = 1.0
 
 [node name="Park Spot" parent="." index="2" instance=ExtResource( 1 )]
-position = Vector2( 1057, 737 )
+position = Vector2( 1569, 702 )
+isALift = true
+lifting = true
 
 [node name="Hook Magnet" parent="." index="3" instance=ExtResource( 7 )]
 position = Vector2( 608, 544 )
 
-[node name="Outline Layer" parent="." index="4"]
+[node name="Lift Lock" parent="." index="4" instance=ExtResource( 8 )]
+position = Vector2( 1569, 500 )
+
+[node name="Outline Layer" parent="." index="5"]
 visible = false
 collision_layer = 2
 
-[node name="NPC" type="Area2D" parent="." index="5"]
+[node name="NPC" type="Area2D" parent="." index="6"]
 physics_interpolation_mode = 2
 position = Vector2( 568, 373 )
 
@@ -46,7 +55,7 @@ centered = false
 position = Vector2( 43, 41 )
 shape = SubResource( 2 )
 
-[node name="Player" type="KinematicBody2D" parent="." index="6"]
+[node name="Player" type="KinematicBody2D" parent="." index="7"]
 position = Vector2( 1068, 359 )
 script = ExtResource( 5 )
 
@@ -71,7 +80,7 @@ frames = ExtResource( 3 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Balloon" index="1"]
 shape = SubResource( 1 )
 
-[node name="Ribbon" type="Skeleton2D" parent="." index="7"]
+[node name="Ribbon" type="Skeleton2D" parent="." index="8"]
 visible = false
 position = Vector2( 1106, 282 )
 
@@ -100,3 +109,4 @@ rest = Transform2D( 1, 0, 0, 1, 16, 0 )
 [connection signal="body_exited" from="Park Spot" to="Player" method="_on_Park_Spot_body_exited"]
 [connection signal="body_entered" from="Hook Magnet" to="Player/Balloon" method="_on_Hook_Magnet_body_entered"]
 [connection signal="body_exited" from="Hook Magnet" to="Player/Balloon" method="_on_Hook_Magnet_body_exited"]
+[connection signal="area_entered" from="Lift Lock" to="Park Spot" method="_on_Lift_Lock_area_entered"]

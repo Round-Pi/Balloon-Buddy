@@ -9,7 +9,8 @@ public class Balloon : KinematicBody2D {
 
     public bool isParked = false;
     // public bool readyToPark = true;
-    public Vector2 isParkedAt;
+    // public Vector2 isParkedAt;
+    // public ParkSpot isParkedAtParkSpot;
     private Vector2 velocity = new Vector2();
     Vector2 anchor;
     public bool isStuck = false; // TODO: How can it detect getting stuck?
@@ -47,17 +48,18 @@ public class Balloon : KinematicBody2D {
     public void Park(Vector2 pos) {
         anchor = pos;
         isParked = true;
+        main.parkSpot.lifting = true;
     }
     public void PickUp() {
         isParked = false;
     }
 
-    public void _on_Hook_Magnet_body_entered(Node hm) {
-        isStuck = true;
-    }
-    public void _on_Hook_Magnet_body_exited(Node hm) {
-        isStuck = false;
-    }
+    // public void _on_Hook_Magnet_body_entered(Node hm) {
+    //     isStuck = true;
+    // }
+    // public void _on_Hook_Magnet_body_exited(Node hm) {
+    //     isStuck = false;
+    // }
 
     // Add new functions above^
 }

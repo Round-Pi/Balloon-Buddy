@@ -237,7 +237,7 @@ public class Player : KinematicBody2D {
         }
     }
     public void _on_Park_Spot_body_entered(Node ps) {
-        parkHere = main.level.GetNode<Area2D>("Park Spot");
+        parkHere = main.level.GetNode<Area2D>("Park Spot"); // TODO: Change later
         canPark = true;
         GD.Print("Parking!");
     }

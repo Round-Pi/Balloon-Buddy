@@ -5,6 +5,9 @@ public class Main : Node {
     public const int tileSize = 64;
     public Player player;
     public Balloon balloon;
+    [Export] public ParkSpot[] parkSpots;
+    public ParkSpot parkSpot;
+    [Export] public Area2D liftLock;
     public Node2D level;
     // public BoxCam2D boxCam2D;
 
@@ -14,6 +17,8 @@ public class Main : Node {
         player = level.GetNode<Player>("Player");
         // balloon = level.GetNode<Balloon>("Balloon");
         balloon = player.GetNode<Balloon>("Balloon");
+        parkSpot = level.GetNode<ParkSpot>("Park Spot");
+        liftLock = level.GetNode<Area2D>("Lift Lock");
         // boxCam2D = player.GetNode<BoxCam2D>("Camera2D");
         // Position2D startPosition = GetNode<Position2D>("StartPosition");
 
